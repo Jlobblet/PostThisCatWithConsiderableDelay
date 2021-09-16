@@ -1,9 +1,8 @@
 module PostThisCatWithConsiderableDelay.Bot.BotMain
 
-open System.Threading.Tasks
+open System.Reflection
 open DisCatSharp
 open DisCatSharp.ApplicationCommands
-open DisCatSharp.Entities
 open FSharp.Control.Tasks
 open Microsoft.Extensions.DependencyInjection
 open PostThisCatWithConsiderableDelay.Extensions
@@ -11,11 +10,7 @@ open PostThisCatWithConsiderableDelay.Services
 open PostThisCatWithConsiderableDelay.Settings
 
 
-let waitUntil (interval: int) condition =
-    unitTask {
-        while not <| condition () do
-            do! Task.Delay interval
-    }
+
 
 let MainAsync (services: ServiceProvider) =
     let discordConfig =
@@ -29,12 +24,11 @@ let MainAsync (services: ServiceProvider) =
     let appCommandsExtension =
         client.UseApplicationCommands(appCommandsConfig)
 
-    appCommandsExtension.RegisterCommands()
-
     let { Token = killSwitch } = services.GetService<KillSwitch>()
 
     unitTask {
         do! client.ConnectAsync()
-        do! waitUntil 1000 (fun () -> killSwitch.IsCancellationRequested)
+        appCommandsExtension.RegisterAllCommands (Assembly.GetEntryAssembly()) client.Guilds.Keys
+        do! Task.WaitUntil 1000<ms> (fun () -> killSwitch.IsCancellationRequested)
         do! client.DisconnectAsync()
     }
