@@ -4,9 +4,11 @@ open DisCatSharp.ApplicationCommands
 open DisCatSharp.Entities
 open PostThisCatWithConsiderableDelay.Extensions
 
+[<Sealed>]
 type MiscCommands() =
     inherit ApplicationCommandsModule()
 
+    [<SlashCommand("ping", "Pong!")>]
     static member Ping(context: InteractionContext) =
         DiscordInteractionResponseBuilder()
             .WithContent("Pong!")
