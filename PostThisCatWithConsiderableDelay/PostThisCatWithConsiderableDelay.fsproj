@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <WarnOn>3390;$(WarnOn)</WarnOn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="Example.App.Config" />
+        <None Include="App.Config">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <Compile Include="Settings.fs" />
+        <Compile Include="Models\Models.fs" />
+        <Compile Include="Models\CatContext.fs" />
+        <Compile Include="Migrations\CatContextModelSnapshot.fs" />
+        <Compile Include="Migrations\20210916153518_Initial.fs" />
+        <Compile Include="Services.fs" />
+        <Compile Include="Extensions.fs" />
+        <Compile Include="Bot\Commands\Misc.fs" />
+        <Compile Include="Bot\BotMain.fs" />
+        <Compile Include="Program.fs" />
+        
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Argu" Version="6.1.1" />
+      <PackageReference Include="DisCatSharp" Version="9.8.1" />
+      <PackageReference Include="DisCatSharp.ApplicationCommands" Version="9.8.1" />
+      <PackageReference Include="EntityFrameworkCore.FSharp" Version="5.0.3-beta006" />
+      <PackageReference Include="FSharpPlus" Version="1.2.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.10" />
+      <PackageReference Include="Ply" Version="0.3.1" />
+    </ItemGroup>
+
+</Project>
