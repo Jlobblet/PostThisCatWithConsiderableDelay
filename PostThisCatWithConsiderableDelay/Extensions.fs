@@ -11,16 +11,6 @@ open PostThisCatWithConsiderableDelay.Settings
 [<Measure>]
 type ms = s
 
-let cartesianProduct seqs =
-    Seq.foldBack
-        (fun elem acc ->
-            seq {
-                for x in elem do
-                    for y in acc -> x :: y
-            })
-        seqs
-        (Seq.singleton [])
-
 type DiscordConfiguration with
     static member FromSettings settings =
         let c = DiscordConfiguration()
