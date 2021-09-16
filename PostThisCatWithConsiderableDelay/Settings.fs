@@ -1,7 +1,6 @@
 module PostThisCatWithConsiderableDelay.Settings
 
 open System
-open System.Runtime.CompilerServices
 open Argu
 
 [<NoComparison>]

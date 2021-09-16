@@ -13,7 +13,7 @@ open PostThisCatWithConsiderableDelay.Settings
 
 let waitUntil (interval: int) condition =
     unitTask {
-        while not <| condition() do
+        while not <| condition () do
             do! Task.Delay interval
     }
 

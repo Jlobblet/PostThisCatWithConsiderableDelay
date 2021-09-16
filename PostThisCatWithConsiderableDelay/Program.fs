@@ -12,6 +12,9 @@ let main argv =
         ServiceCollection()
         |> ConfigureServices(Settings.fromArgv argv)
 
-    BotMain.MainAsync(services).GetAwaiter().GetResult()
+    BotMain
+        .MainAsync(services)
+        .GetAwaiter()
+        .GetResult()
 
     0 // return an integer exit code
