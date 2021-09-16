@@ -26,13 +26,14 @@
 
     <ItemGroup>
       <PackageReference Include="Argu" Version="6.1.1" />
-      <PackageReference Include="DisCatSharp" Version="9.8.1" />
-      <PackageReference Include="DisCatSharp.ApplicationCommands" Version="9.8.1" />
+      <PackageReference Include="DisCatSharp" Version="9.8.2" />
+      <PackageReference Include="DisCatSharp.ApplicationCommands" Version="9.8.2" />
       <PackageReference Include="EntityFrameworkCore.FSharp" Version="5.0.3-beta006" />
       <PackageReference Include="FSharpPlus" Version="1.2.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.10" />
       <PackageReference Include="Ply" Version="0.3.1" />
+      <PackageReference Update="FSharp.Core" Version="5.0.2" />
     </ItemGroup>
 
 </Project>
