@@ -3,17 +3,25 @@ module PostThisCatWithConsiderableDelay.Bot.BotMain
 open System.Reflection
 open DisCatSharp
 open DisCatSharp.ApplicationCommands
+open DisCatSharp.Common.Utilities
 open FSharp.Control.Tasks
 open Microsoft.Extensions.DependencyInjection
 open PostThisCatWithConsiderableDelay.Extensions
+open PostThisCatWithConsiderableDelay.Bot.Listeners.Cat
+open PostThisCatWithConsiderableDelay.Models.CatContext
 open PostThisCatWithConsiderableDelay.Services
 open PostThisCatWithConsiderableDelay.Settings
 
 let MainAsync (services: ServiceProvider) =
+    let settings = services.GetService<Settings>()
     let discordConfig =
-        DiscordConfiguration.FromSettings(services.GetService<Settings>())
+        DiscordConfiguration.FromSettings(settings)
 
     let client = new DiscordClient(discordConfig)
+    
+    let db = new CatContext (settings.ConnectionString)
+
+    client.add_MessageCreated (AsyncEventHandler<_, _>(AwardPoints db))
 
     let appCommandsConfig =
         ApplicationCommandsConfiguration.FromServiceProvider services

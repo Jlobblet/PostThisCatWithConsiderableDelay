@@ -20,6 +20,7 @@
         <Compile Include="Services.fs" />
         <Compile Include="Extensions.fs" />
         <Compile Include="Bot\Commands\Misc.fs" />
+        <Compile Include="Bot\Listeners\Cat.fs" />
         <Compile Include="Bot\BotMain.fs" />
         <Compile Include="Program.fs" />
         

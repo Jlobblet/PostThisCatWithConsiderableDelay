@@ -1,15 +1,33 @@
 module PostThisCatWithConsiderableDelay.Extensions
 
+open System
 open System.Reflection
 open System.Threading.Tasks
 open DisCatSharp
 open DisCatSharp.ApplicationCommands
 open FSharp.Data.UnitSystems.SI.UnitSymbols
 open FSharp.Control.Tasks
+open Microsoft.EntityFrameworkCore
 open PostThisCatWithConsiderableDelay.Settings
 
 [<Measure>]
 type ms = s
+
+let isRefNull (a: 'a when 'a: not struct) = obj.ReferenceEquals(a, null)
+
+[<RequireQualifiedAccess>]
+module Option =
+    let ofRef a =
+        match isRefNull a with
+        | true -> None
+        | false -> Some a
+        
+type DbContext with
+    member this.TryFindAsync<'TEntity when 'TEntity: not struct> ([<ParamArray>] keyValues: obj []) =
+        vtask {
+            let! result = this.FindAsync<'TEntity> keyValues
+            return Option.ofRef result
+        }
 
 type DiscordConfiguration with
     static member FromSettings settings =
