@@ -21,22 +21,20 @@ let MainAsync (services: ServiceProvider) =
     let discordConfig =
         DiscordConfiguration.FromSettings(services.GetService<Settings>())
 
-    use client = new DiscordClient(discordConfig)
+    let client = new DiscordClient(discordConfig)
+    
+    let appCommandsConfig =
+        ApplicationCommandsConfiguration.FromServiceProvider services
 
-//    let appCommandsConfig =
-//        ApplicationCommandsConfiguration.FromServiceProvider services
-//
-//    let appCommandsExtension =
-//        client.UseApplicationCommands(appCommandsConfig)
-//
-//    appCommandsExtension.RegisterCommands()
+    let appCommandsExtension =
+        client.UseApplicationCommands(appCommandsConfig)
+
+    appCommandsExtension.RegisterCommands()
 
     let { Token = killSwitch } = services.GetService<KillSwitch>()
 
     unitTask {
         do! client.ConnectAsync()
-//        do! client.UpdateStatusAsync(userStatus = UserStatus.Online)
-//        do! waitUntil 1000 (fun () -> killSwitch.IsCancellationRequested)
-//        do! client.UpdateStatusAsync(userStatus = UserStatus.Offline)
-//        do! client.DisconnectAsync()
+        do! waitUntil 1000 (fun () -> killSwitch.IsCancellationRequested)
+        do! client.DisconnectAsync()
     }
