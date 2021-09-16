@@ -9,15 +9,12 @@ open PostThisCatWithConsiderableDelay.Extensions
 open PostThisCatWithConsiderableDelay.Services
 open PostThisCatWithConsiderableDelay.Settings
 
-
-
-
 let MainAsync (services: ServiceProvider) =
     let discordConfig =
         DiscordConfiguration.FromSettings(services.GetService<Settings>())
 
     let client = new DiscordClient(discordConfig)
-    
+
     let appCommandsConfig =
         ApplicationCommandsConfiguration.FromServiceProvider services
 
@@ -28,7 +25,7 @@ let MainAsync (services: ServiceProvider) =
 
     unitTask {
         do! client.ConnectAsync()
-        appCommandsExtension.RegisterAllCommands (Assembly.GetEntryAssembly()) (Array.ofSeq client.Guilds.Keys)
+        appCommandsExtension.RegisterAllCommands(Assembly.GetEntryAssembly()) (Array.ofSeq client.Guilds.Keys)
         do! Task.WaitUntil 1000<ms> (fun () -> killSwitch.IsCancellationRequested)
         do! client.DisconnectAsync()
     }

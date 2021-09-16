@@ -8,14 +8,18 @@ open FSharp.Data.UnitSystems.SI.UnitSymbols
 open FSharp.Control.Tasks
 open PostThisCatWithConsiderableDelay.Settings
 
-[<Measure>] type ms = s
+[<Measure>]
+type ms = s
 
 let cartesianProduct seqs =
-    Seq.foldBack (fun elem acc ->
-        seq {
-            for x in elem do
-                for y in acc -> x :: y
-        }) seqs (Seq.singleton [])
+    Seq.foldBack
+        (fun elem acc ->
+            seq {
+                for x in elem do
+                    for y in acc -> x :: y
+            })
+        seqs
+        (Seq.singleton [])
 
 type DiscordConfiguration with
     static member FromSettings settings =
@@ -37,7 +41,7 @@ type ApplicationCommandsExtension with
         let modules =
             assembly.GetTypes()
             |> Array.filter (fun t -> t.IsSubclassOf typeof<ApplicationCommandsModule>)
-           
+
         guilds
         |> Array.map System.Nullable
         |> Array.allPairs modules
@@ -46,11 +50,11 @@ type ApplicationCommandsExtension with
 type InteractionContext with
     member this.ReplyAsync builder =
         this.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder)
-     
-[<RequireQualifiedAccess>]   
+
+[<RequireQualifiedAccess>]
 module Task =
     let WaitUntil (interval: int<ms>) condition =
         unitTask {
             while not <| condition () do
-                do! Task.Delay (interval / 1<ms>)
+                do! Task.Delay(interval / 1<ms>)
         }
