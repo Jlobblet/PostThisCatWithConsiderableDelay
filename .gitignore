@@ -351,4 +351,8 @@ MigrationBackup/
 # CI directory
 NuGet/
 
+# Contains secrets
 App.Config
+
+# Database file
+*.db
