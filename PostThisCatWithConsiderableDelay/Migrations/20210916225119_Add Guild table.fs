@@ -10,10 +10,107 @@ open Microsoft.EntityFrameworkCore.Storage.ValueConversion
 open PostThisCatWithConsiderableDelay.Models
 
 [<DbContext(typeof<CatContext.CatContext>)>]
-type CatContextModelSnapshot() =
-    inherit ModelSnapshot()
+[<Migration("20210916225119_Add Guild table")>]
+type AddGuildtable() =
+    inherit Migration()
 
-    override this.BuildModel(modelBuilder: ModelBuilder) =
+    override this.Up(migrationBuilder:MigrationBuilder) =
+        migrationBuilder.AlterColumn<UInt64>(
+            name = "UserId"
+            ,table = "Posts"
+            ,``type`` = "INTEGER"
+            ,nullable = true
+            ,oldClrType = typedefof<UInt64>
+            ,oldType = "INTEGER"
+            ,oldNullable = false
+            ) |> ignore
+
+        migrationBuilder.AlterColumn<UInt64>(
+            name = "UserGuildId"
+            ,table = "Posts"
+            ,``type`` = "INTEGER"
+            ,nullable = true
+            ,oldClrType = typedefof<UInt64>
+            ,oldType = "INTEGER"
+            ,oldNullable = false
+            ) |> ignore
+
+        migrationBuilder.CreateTable(
+            name = "Guilds"
+            ,columns = (fun table -> 
+            {|
+                GuildId =
+                    table.Column<UInt64>(
+                        nullable = false
+                        ,``type`` = "INTEGER"
+                    ).Annotation("Sqlite:Autoincrement", true)
+                CatChannel =
+                    table.Column<UInt64>(
+                        nullable = false
+                        ,``type`` = "INTEGER"
+                    )
+            |})
+            ,constraints =
+                (fun table -> 
+                    table.PrimaryKey("PK_Guilds", (fun x -> (x.GuildId) :> obj)) |> ignore
+                ) 
+        ) |> ignore
+
+        migrationBuilder.CreateIndex(
+            name = "IX_Users_GuildId"
+            ,table = "Users"
+            ,column = "GuildId"
+            ) |> ignore
+
+        migrationBuilder.AddForeignKey(
+            name = "FK_Users_Guilds_GuildId"
+            ,table = "Users"
+            ,column = "GuildId"
+            ,principalTable = "Guilds"
+            ,principalColumn = "GuildId"
+            ,onDelete = ReferentialAction.Cascade
+        ) |> ignore
+
+
+    override this.Down(migrationBuilder:MigrationBuilder) =
+        migrationBuilder.DropForeignKey(
+            name = "FK_Users_Guilds_GuildId"
+            ,table = "Users"
+            ) |> ignore
+
+        migrationBuilder.DropTable(
+            name = "Guilds"
+            ) |> ignore
+
+        migrationBuilder.DropIndex(
+            name = "IX_Users_GuildId"
+            ,table = "Users"
+            ) |> ignore
+
+        migrationBuilder.AlterColumn<UInt64>(
+            name = "UserId"
+            ,table = "Posts"
+            ,``type`` = "INTEGER"
+            ,nullable = false
+            ,defaultValue = 0uL
+            ,oldClrType = typedefof<UInt64>
+            ,oldType = "INTEGER"
+            ,oldNullable = true
+            ) |> ignore
+
+        migrationBuilder.AlterColumn<UInt64>(
+            name = "UserGuildId"
+            ,table = "Posts"
+            ,``type`` = "INTEGER"
+            ,nullable = false
+            ,defaultValue = 0uL
+            ,oldClrType = typedefof<UInt64>
+            ,oldType = "INTEGER"
+            ,oldNullable = true
+            ) |> ignore
+
+
+    override this.BuildTargetModel(modelBuilder: ModelBuilder) =
         modelBuilder
             .HasAnnotation("ProductVersion", "5.0.10")
             |> ignore

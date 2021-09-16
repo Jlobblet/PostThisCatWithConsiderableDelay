@@ -11,7 +11,8 @@ type User =
       GuildId: uint64
       [<Required>]
       Points: int64
-      Posts: ResizeArray<Post> }
+      Posts: ResizeArray<Post>
+      Guild: Guild }
 
 and [<CLIMutable; NoComparison>] Post =
     { [<Key>]
@@ -19,3 +20,9 @@ and [<CLIMutable; NoComparison>] Post =
       User: User
       [<Required>]
       Timestamp: DateTime }
+
+and [<CLIMutable; NoComparison>] Guild =
+    { [<Key>]
+      GuildId: uint64
+      CatChannel: uint64
+      Users: ResizeArray<User> }

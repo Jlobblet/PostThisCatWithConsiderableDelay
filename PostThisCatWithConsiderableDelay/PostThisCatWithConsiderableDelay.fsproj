@@ -16,6 +16,7 @@
         <Compile Include="Models\CatContext.fs" />
         <Compile Include="Migrations\CatContextModelSnapshot.fs" />
         <Compile Include="Migrations\20210916153518_Initial.fs" />
+        <Compile Include="Migrations\20210916225119_Add Guild table.fs" />
         <Compile Include="Services.fs" />
         <Compile Include="Extensions.fs" />
         <Compile Include="Bot\Commands\Misc.fs" />
