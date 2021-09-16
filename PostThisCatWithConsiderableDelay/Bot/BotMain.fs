@@ -28,7 +28,7 @@ let MainAsync (services: ServiceProvider) =
 
     unitTask {
         do! client.ConnectAsync()
-        appCommandsExtension.RegisterAllCommands (Assembly.GetEntryAssembly()) client.Guilds.Keys
+        appCommandsExtension.RegisterAllCommands (Assembly.GetEntryAssembly()) (Array.ofSeq client.Guilds.Keys)
         do! Task.WaitUntil 1000<ms> (fun () -> killSwitch.IsCancellationRequested)
         do! client.DisconnectAsync()
     }
