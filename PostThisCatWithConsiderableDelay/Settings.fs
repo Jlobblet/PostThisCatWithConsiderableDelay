@@ -35,9 +35,12 @@ type Settings =
 
 [<RequireQualifiedAccess>]
 module Settings =
+    [<Literal>]
+    let private config = "App.Config"
+    
     let fromArgv argv =
         let results =
-            Parser.Parse(inputs = argv, configurationReader = ConfigurationReader.FromAppSettingsFile("App.Config"))
+            Parser.Parse(inputs = argv, configurationReader = ConfigurationReader.FromAppSettingsFile(config))
 
         { ConnectionString = results.GetResult <@ ConnectionString @>
           DiscordToken = results.GetResult <@ DiscordToken @>
@@ -47,6 +50,6 @@ module Settings =
         Parser
             .Parse(
                 ignoreUnrecognized = true,
-                configurationReader = ConfigurationReader.FromAppSettingsFile("App.Config")
+                configurationReader = ConfigurationReader.FromAppSettingsFile(config)
             )
             .GetResult <@ ConnectionString @>
