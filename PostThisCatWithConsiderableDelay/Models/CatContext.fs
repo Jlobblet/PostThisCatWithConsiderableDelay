@@ -1,9 +1,8 @@
 module PostThisCatWithConsiderableDelay.Models.CatContext
 
-open System
-open Microsoft.EntityFrameworkCore
 open EntityFrameworkCore.FSharp.Extensions
-open PostThisCatWithConsiderableDelay.Models.User
+open Microsoft.EntityFrameworkCore
+open PostThisCatWithConsiderableDelay.Models.Models
 
 type CatContext(connectionString: string) =
     inherit DbContext()
@@ -23,7 +22,7 @@ type CatContext(connectionString: string) =
         and set v = this.posts <- v
 
     [<DefaultValue>]
-    val mutable private guilds : DbSet<Guild>
+    val mutable private guilds: DbSet<Guild>
 
     member this.Guilds
         with get () = this.guilds

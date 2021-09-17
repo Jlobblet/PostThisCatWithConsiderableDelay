@@ -10,10 +10,86 @@ open Microsoft.EntityFrameworkCore.Storage.ValueConversion
 open PostThisCatWithConsiderableDelay.Models
 
 [<DbContext(typeof<CatContext.CatContext>)>]
-type CatContextModelSnapshot() =
-    inherit ModelSnapshot()
+[<Migration("20210917000324_Add Posts to Guild table")>]
+type AddPoststoGuildtable() =
+    inherit Migration()
 
-    override this.BuildModel(modelBuilder: ModelBuilder) =
+    override this.Up(migrationBuilder: MigrationBuilder) =
+        migrationBuilder.AlterColumn<UInt64>(
+            name = "UserId",
+            table = "Posts",
+            ``type`` = "INTEGER",
+            nullable = true,
+            oldClrType = typedefof<UInt64>,
+            oldType = "INTEGER",
+            oldNullable = false
+        )
+        |> ignore
+
+        migrationBuilder.AlterColumn<UInt64>(
+            name = "UserGuildId",
+            table = "Posts",
+            ``type`` = "INTEGER",
+            nullable = true,
+            oldClrType = typedefof<UInt64>,
+            oldType = "INTEGER",
+            oldNullable = false
+        )
+        |> ignore
+
+        migrationBuilder.AddColumn<UInt64>(name = "GuildId", table = "Posts", ``type`` = "INTEGER", nullable = true)
+        |> ignore
+
+        migrationBuilder.CreateIndex(name = "IX_Posts_GuildId", table = "Posts", column = "GuildId")
+        |> ignore
+
+        migrationBuilder.AddForeignKey(
+            name = "FK_Posts_Guilds_GuildId",
+            table = "Posts",
+            column = "GuildId",
+            principalTable = "Guilds",
+            principalColumn = "GuildId",
+            onDelete = ReferentialAction.Restrict
+        )
+        |> ignore
+
+
+    override this.Down(migrationBuilder: MigrationBuilder) =
+        migrationBuilder.DropForeignKey(name = "FK_Posts_Guilds_GuildId", table = "Posts")
+        |> ignore
+
+        migrationBuilder.DropIndex(name = "IX_Posts_GuildId", table = "Posts")
+        |> ignore
+
+        migrationBuilder.DropColumn(name = "GuildId", table = "Posts")
+        |> ignore
+
+        migrationBuilder.AlterColumn<UInt64>(
+            name = "UserId",
+            table = "Posts",
+            ``type`` = "INTEGER",
+            nullable = false,
+            defaultValue = 0uL,
+            oldClrType = typedefof<UInt64>,
+            oldType = "INTEGER",
+            oldNullable = true
+        )
+        |> ignore
+
+        migrationBuilder.AlterColumn<UInt64>(
+            name = "UserGuildId",
+            table = "Posts",
+            ``type`` = "INTEGER",
+            nullable = false,
+            defaultValue = 0uL,
+            oldClrType = typedefof<UInt64>,
+            oldType = "INTEGER",
+            oldNullable = true
+        )
+        |> ignore
+
+
+    override this.BuildTargetModel(modelBuilder: ModelBuilder) =
         modelBuilder.HasAnnotation("ProductVersion", "5.0.10")
         |> ignore
 

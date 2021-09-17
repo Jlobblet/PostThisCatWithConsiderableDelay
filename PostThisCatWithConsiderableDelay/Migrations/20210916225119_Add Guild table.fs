@@ -14,180 +14,216 @@ open PostThisCatWithConsiderableDelay.Models
 type AddGuildtable() =
     inherit Migration()
 
-    override this.Up(migrationBuilder:MigrationBuilder) =
+    override this.Up(migrationBuilder: MigrationBuilder) =
         migrationBuilder.AlterColumn<UInt64>(
-            name = "UserId"
-            ,table = "Posts"
-            ,``type`` = "INTEGER"
-            ,nullable = true
-            ,oldClrType = typedefof<UInt64>
-            ,oldType = "INTEGER"
-            ,oldNullable = false
-            ) |> ignore
+            name = "UserId",
+            table = "Posts",
+            ``type`` = "INTEGER",
+            nullable = true,
+            oldClrType = typedefof<UInt64>,
+            oldType = "INTEGER",
+            oldNullable = false
+        )
+        |> ignore
 
         migrationBuilder.AlterColumn<UInt64>(
-            name = "UserGuildId"
-            ,table = "Posts"
-            ,``type`` = "INTEGER"
-            ,nullable = true
-            ,oldClrType = typedefof<UInt64>
-            ,oldType = "INTEGER"
-            ,oldNullable = false
-            ) |> ignore
+            name = "UserGuildId",
+            table = "Posts",
+            ``type`` = "INTEGER",
+            nullable = true,
+            oldClrType = typedefof<UInt64>,
+            oldType = "INTEGER",
+            oldNullable = false
+        )
+        |> ignore
 
         migrationBuilder.CreateTable(
-            name = "Guilds"
-            ,columns = (fun table -> 
-            {|
-                GuildId =
-                    table.Column<UInt64>(
-                        nullable = false
-                        ,``type`` = "INTEGER"
-                    ).Annotation("Sqlite:Autoincrement", true)
-                CatChannel =
-                    table.Column<UInt64>(
-                        nullable = false
-                        ,``type`` = "INTEGER"
-                    )
-            |})
-            ,constraints =
-                (fun table -> 
-                    table.PrimaryKey("PK_Guilds", (fun x -> (x.GuildId) :> obj)) |> ignore
-                ) 
-        ) |> ignore
+            name = "Guilds",
+            columns =
+                (fun table ->
+                    {| GuildId =
+                           table
+                               .Column<UInt64>(nullable = false, ``type`` = "INTEGER")
+                               .Annotation("Sqlite:Autoincrement", true)
+                       CatChannel = table.Column<UInt64>(nullable = false, ``type`` = "INTEGER") |}),
+            constraints =
+                (fun table ->
+                    table.PrimaryKey("PK_Guilds", (fun x -> (x.GuildId) :> obj))
+                    |> ignore)
+        )
+        |> ignore
 
-        migrationBuilder.CreateIndex(
-            name = "IX_Users_GuildId"
-            ,table = "Users"
-            ,column = "GuildId"
-            ) |> ignore
+        migrationBuilder.CreateIndex(name = "IX_Users_GuildId", table = "Users", column = "GuildId")
+        |> ignore
 
         migrationBuilder.AddForeignKey(
-            name = "FK_Users_Guilds_GuildId"
-            ,table = "Users"
-            ,column = "GuildId"
-            ,principalTable = "Guilds"
-            ,principalColumn = "GuildId"
-            ,onDelete = ReferentialAction.Cascade
-        ) |> ignore
+            name = "FK_Users_Guilds_GuildId",
+            table = "Users",
+            column = "GuildId",
+            principalTable = "Guilds",
+            principalColumn = "GuildId",
+            onDelete = ReferentialAction.Cascade
+        )
+        |> ignore
 
 
-    override this.Down(migrationBuilder:MigrationBuilder) =
-        migrationBuilder.DropForeignKey(
-            name = "FK_Users_Guilds_GuildId"
-            ,table = "Users"
-            ) |> ignore
+    override this.Down(migrationBuilder: MigrationBuilder) =
+        migrationBuilder.DropForeignKey(name = "FK_Users_Guilds_GuildId", table = "Users")
+        |> ignore
 
-        migrationBuilder.DropTable(
-            name = "Guilds"
-            ) |> ignore
+        migrationBuilder.DropTable(name = "Guilds")
+        |> ignore
 
-        migrationBuilder.DropIndex(
-            name = "IX_Users_GuildId"
-            ,table = "Users"
-            ) |> ignore
+        migrationBuilder.DropIndex(name = "IX_Users_GuildId", table = "Users")
+        |> ignore
 
         migrationBuilder.AlterColumn<UInt64>(
-            name = "UserId"
-            ,table = "Posts"
-            ,``type`` = "INTEGER"
-            ,nullable = false
-            ,defaultValue = 0uL
-            ,oldClrType = typedefof<UInt64>
-            ,oldType = "INTEGER"
-            ,oldNullable = true
-            ) |> ignore
+            name = "UserId",
+            table = "Posts",
+            ``type`` = "INTEGER",
+            nullable = false,
+            defaultValue = 0uL,
+            oldClrType = typedefof<UInt64>,
+            oldType = "INTEGER",
+            oldNullable = true
+        )
+        |> ignore
 
         migrationBuilder.AlterColumn<UInt64>(
-            name = "UserGuildId"
-            ,table = "Posts"
-            ,``type`` = "INTEGER"
-            ,nullable = false
-            ,defaultValue = 0uL
-            ,oldClrType = typedefof<UInt64>
-            ,oldType = "INTEGER"
-            ,oldNullable = true
-            ) |> ignore
+            name = "UserGuildId",
+            table = "Posts",
+            ``type`` = "INTEGER",
+            nullable = false,
+            defaultValue = 0uL,
+            oldClrType = typedefof<UInt64>,
+            oldType = "INTEGER",
+            oldNullable = true
+        )
+        |> ignore
 
 
     override this.BuildTargetModel(modelBuilder: ModelBuilder) =
-        modelBuilder
-            .HasAnnotation("ProductVersion", "5.0.10")
-            |> ignore
+        modelBuilder.HasAnnotation("ProductVersion", "5.0.10")
+        |> ignore
 
-        modelBuilder.Entity("PostThisCatWithConsiderableDelay.Models.User+Guild", (fun b ->
+        modelBuilder.Entity(
+            "PostThisCatWithConsiderableDelay.Models.User+Guild",
+            (fun b ->
 
-            b.Property<UInt64>("GuildId")
-                .IsRequired(true)
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER") |> ignore
-            b.Property<UInt64>("CatChannel")
-                .IsRequired(true)
-                .HasColumnType("INTEGER") |> ignore
+                b
+                    .Property<UInt64>("GuildId")
+                    .IsRequired(true)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER")
+                |> ignore
 
-            b.HasKey("GuildId") |> ignore
+                b
+                    .Property<UInt64>("CatChannel")
+                    .IsRequired(true)
+                    .HasColumnType("INTEGER")
+                |> ignore
 
-            b.ToTable("Guilds") |> ignore
+                b.HasKey("GuildId") |> ignore
 
-        )) |> ignore
+                b.ToTable("Guilds") |> ignore
 
-        modelBuilder.Entity("PostThisCatWithConsiderableDelay.Models.User+Post", (fun b ->
+                )
+        )
+        |> ignore
 
-            b.Property<Guid>("PostId")
-                .IsRequired(true)
-                .ValueGeneratedOnAdd()
-                .HasColumnType("TEXT") |> ignore
-            b.Property<DateTime>("Timestamp")
-                .IsRequired(true)
-                .HasColumnType("TEXT") |> ignore
-            b.Property<Nullable<UInt64>>("UserGuildId")
-                .IsRequired(true)
-                .HasColumnType("INTEGER") |> ignore
-            b.Property<Nullable<UInt64>>("UserId")
-                .IsRequired(true)
-                .HasColumnType("INTEGER") |> ignore
+        modelBuilder.Entity(
+            "PostThisCatWithConsiderableDelay.Models.User+Post",
+            (fun b ->
 
-            b.HasKey("PostId") |> ignore
+                b
+                    .Property<Guid>("PostId")
+                    .IsRequired(true)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("TEXT")
+                |> ignore
 
+                b
+                    .Property<DateTime>("Timestamp")
+                    .IsRequired(true)
+                    .HasColumnType("TEXT")
+                |> ignore
 
-            b.HasIndex("UserId", "UserGuildId") |> ignore
+                b
+                    .Property<Nullable<UInt64>>("UserGuildId")
+                    .IsRequired(true)
+                    .HasColumnType("INTEGER")
+                |> ignore
 
-            b.ToTable("Posts") |> ignore
+                b
+                    .Property<Nullable<UInt64>>("UserId")
+                    .IsRequired(true)
+                    .HasColumnType("INTEGER")
+                |> ignore
 
-        )) |> ignore
-
-        modelBuilder.Entity("PostThisCatWithConsiderableDelay.Models.User+User", (fun b ->
-
-            b.Property<UInt64>("UserId")
-                .IsRequired(true)
-                .HasColumnType("INTEGER") |> ignore
-            b.Property<UInt64>("GuildId")
-                .IsRequired(true)
-                .HasColumnType("INTEGER") |> ignore
-            b.Property<Int64>("Points")
-                .IsRequired(true)
-                .HasColumnType("INTEGER") |> ignore
-
-            b.HasKey("UserId", "GuildId") |> ignore
+                b.HasKey("PostId") |> ignore
 
 
-            b.HasIndex("GuildId") |> ignore
+                b.HasIndex("UserId", "UserGuildId") |> ignore
 
-            b.ToTable("Users") |> ignore
+                b.ToTable("Posts") |> ignore
 
-        )) |> ignore
+                )
+        )
+        |> ignore
 
-        modelBuilder.Entity("PostThisCatWithConsiderableDelay.Models.User+Post", (fun b ->
-            b.HasOne("PostThisCatWithConsiderableDelay.Models.User+User","User")
-                .WithMany("Posts")
-                .HasForeignKey("UserId", "UserGuildId") |> ignore
-        )) |> ignore
+        modelBuilder.Entity(
+            "PostThisCatWithConsiderableDelay.Models.User+User",
+            (fun b ->
 
-        modelBuilder.Entity("PostThisCatWithConsiderableDelay.Models.User+User", (fun b ->
-            b.HasOne("PostThisCatWithConsiderableDelay.Models.User+Guild","Guild")
-                .WithMany("Users")
-                .HasForeignKey("GuildId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired() |> ignore
-        )) |> ignore
+                b
+                    .Property<UInt64>("UserId")
+                    .IsRequired(true)
+                    .HasColumnType("INTEGER")
+                |> ignore
 
+                b
+                    .Property<UInt64>("GuildId")
+                    .IsRequired(true)
+                    .HasColumnType("INTEGER")
+                |> ignore
+
+                b
+                    .Property<Int64>("Points")
+                    .IsRequired(true)
+                    .HasColumnType("INTEGER")
+                |> ignore
+
+                b.HasKey("UserId", "GuildId") |> ignore
+
+
+                b.HasIndex("GuildId") |> ignore
+
+                b.ToTable("Users") |> ignore
+
+                )
+        )
+        |> ignore
+
+        modelBuilder.Entity(
+            "PostThisCatWithConsiderableDelay.Models.User+Post",
+            (fun b ->
+                b
+                    .HasOne("PostThisCatWithConsiderableDelay.Models.User+User", "User")
+                    .WithMany("Posts")
+                    .HasForeignKey("UserId", "UserGuildId")
+                |> ignore)
+        )
+        |> ignore
+
+        modelBuilder.Entity(
+            "PostThisCatWithConsiderableDelay.Models.User+User",
+            (fun b ->
+                b
+                    .HasOne("PostThisCatWithConsiderableDelay.Models.User+Guild", "Guild")
+                    .WithMany("Users")
+                    .HasForeignKey("GuildId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired()
+                |> ignore)
+        )
+        |> ignore

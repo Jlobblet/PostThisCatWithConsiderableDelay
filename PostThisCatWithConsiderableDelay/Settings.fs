@@ -7,11 +7,13 @@ open Argu
 type Arguments =
     | [<ExactlyOnce; NoCommandLine>] ConnectionString of ConnectionString: string
     | [<ExactlyOnce>] DiscordToken of DiscordToken: string
+    | [<ExactlyOnce>] CatUrl of CatUrl: string
     interface IArgParserTemplate with
         member this.Usage =
             match this with
             | ConnectionString _ -> ""
             | DiscordToken _ -> ""
+            | CatUrl _ -> ""
 
 let errorHandler =
     ProcessExiter(
@@ -27,7 +29,8 @@ let Parser =
 [<NoComparison>]
 type Settings =
     { ConnectionString: string
-      DiscordToken: string }
+      DiscordToken: string
+      CatUrl: string }
 
 
 [<RequireQualifiedAccess>]
@@ -37,7 +40,8 @@ module Settings =
             Parser.Parse(inputs = argv, configurationReader = ConfigurationReader.FromAppSettingsFile("App.Config"))
 
         { ConnectionString = results.GetResult <@ ConnectionString @>
-          DiscordToken = results.GetResult <@ DiscordToken @> }
+          DiscordToken = results.GetResult <@ DiscordToken @>
+          CatUrl = results.GetResult <@ CatUrl @> }
 
     let getConnectionString () =
         Parser

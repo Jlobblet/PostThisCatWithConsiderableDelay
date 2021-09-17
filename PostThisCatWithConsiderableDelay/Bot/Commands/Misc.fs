@@ -4,7 +4,6 @@ open DisCatSharp.ApplicationCommands
 open DisCatSharp.Entities
 open PostThisCatWithConsiderableDelay.Extensions
 
-[<Sealed>]
 type MiscCommands() =
     inherit ApplicationCommandsModule()
 

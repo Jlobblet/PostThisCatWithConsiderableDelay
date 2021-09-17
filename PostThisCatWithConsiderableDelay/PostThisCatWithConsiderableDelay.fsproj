@@ -17,9 +17,12 @@
         <Compile Include="Migrations\CatContextModelSnapshot.fs" />
         <Compile Include="Migrations\20210916153518_Initial.fs" />
         <Compile Include="Migrations\20210916225119_Add Guild table.fs" />
+        <Compile Include="Migrations\20210917000324_Add Posts to Guild table.fs" />
         <Compile Include="Services.fs" />
         <Compile Include="Extensions.fs" />
+        <Compile Include="Database.fs" />
         <Compile Include="Bot\Commands\Misc.fs" />
+        <Compile Include="Bot\Commands\CatCommands.fs" />
         <Compile Include="Bot\Listeners\Cat.fs" />
         <Compile Include="Bot\BotMain.fs" />
         <Compile Include="Program.fs" />
@@ -32,6 +35,8 @@
       <PackageReference Include="DisCatSharp.ApplicationCommands" Version="9.8.2" />
       <PackageReference Include="EntityFrameworkCore.FSharp" Version="5.0.3-beta006" />
       <PackageReference Include="FSharpPlus" Version="1.2.1" />
+      <PackageReference Include="FsToolkit.ErrorHandling" Version="2.7.0" />
+      <PackageReference Include="FsToolkit.ErrorHandling.TaskResult" Version="2.7.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.10" />
       <PackageReference Include="Ply" Version="0.3.1" />

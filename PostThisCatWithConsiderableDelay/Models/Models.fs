@@ -1,4 +1,4 @@
-module PostThisCatWithConsiderableDelay.Models.User
+module PostThisCatWithConsiderableDelay.Models.Models
 
 open System
 open System.ComponentModel.DataAnnotations
@@ -25,4 +25,5 @@ and [<CLIMutable; NoComparison>] Guild =
     { [<Key>]
       GuildId: uint64
       CatChannel: uint64
-      Users: ResizeArray<User> }
+      Users: ResizeArray<User>
+      Posts: ResizeArray<Post> }
