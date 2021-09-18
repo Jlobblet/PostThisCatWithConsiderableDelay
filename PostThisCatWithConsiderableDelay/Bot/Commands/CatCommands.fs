@@ -11,7 +11,6 @@ open FSharpPlus.Data
 open FsToolkit.ErrorHandling
 open PostThisCatWithConsiderableDelay.Database
 open PostThisCatWithConsiderableDelay.Extensions
-open PostThisCatWithConsiderableDelay.Models.CatContext
 open PostThisCatWithConsiderableDelay.Models.Models
 open PostThisCatWithConsiderableDelay.Settings
 

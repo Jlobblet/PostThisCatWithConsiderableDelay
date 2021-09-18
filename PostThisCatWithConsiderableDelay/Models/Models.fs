@@ -9,12 +9,14 @@ type User =
     { [<Key; DatabaseGenerated(DatabaseGeneratedOption.None)>]
       UserId: uint64 }
 
-and [<CLIMutable; NoComparison>] Guild =
+[<CLIMutable; NoComparison>]
+type Guild =
     { [<Key; DatabaseGenerated(DatabaseGeneratedOption.None)>]
       GuildId: uint64
       CatChannel: uint64 }
 
-and [<CLIMutable; NoComparison>] Post =
+[<CLIMutable; NoComparison>]
+type Post =
     { [<Key; DatabaseGenerated(DatabaseGeneratedOption.None)>]
       PostId: Guid
       [<Required>]
