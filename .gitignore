@@ -355,4 +355,4 @@ NuGet/
 App.Config
 
 # Database file
-*.db
+*.db*

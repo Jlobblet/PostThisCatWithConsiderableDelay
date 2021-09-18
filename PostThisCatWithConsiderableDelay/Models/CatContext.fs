@@ -3,6 +3,7 @@ module PostThisCatWithConsiderableDelay.Models.CatContext
 open EntityFrameworkCore.FSharp.Extensions
 open Microsoft.EntityFrameworkCore
 open PostThisCatWithConsiderableDelay.Models.Models
+open PostThisCatWithConsiderableDelay.Settings
 
 type CatContext(connectionString: string) =
     inherit DbContext()
@@ -32,11 +33,8 @@ type CatContext(connectionString: string) =
         builder.RegisterOptionTypes()
         builder.RegisterSingleUnionCases()
 
-        builder
-            .Entity<User>()
-            .HasKey(fun u -> (u.UserId, u.GuildId) :> obj)
-        |> ignore<Metadata.Builders.KeyBuilder>
-
     override _.OnConfiguring builder =
         builder.UseSqlite(connectionString)
         |> ignore<DbContextOptionsBuilder>
+
+    new(settings: Settings) = new CatContext(settings.ConnectionString)

@@ -3,6 +3,7 @@ module PostThisCatWithConsiderableDelay.Services
 open System.Threading
 open Microsoft.EntityFrameworkCore.Design
 open Microsoft.Extensions.DependencyInjection
+open Microsoft.Extensions.Logging
 open PostThisCatWithConsiderableDelay.Models.CatContext
 open PostThisCatWithConsiderableDelay.Settings
 
@@ -14,12 +15,10 @@ let ConfigureServices (settings: Settings) (services: IServiceCollection) =
     services
         .AddSingleton<Settings>(settings)
         .AddSingleton<KillSwitch>(KillSwitch.Create())
-        .AddDbContext<CatContext>()
+        .AddDbContext<CatContext>(ServiceLifetime.Transient)
         .BuildServiceProvider()
 
 type CatContextFactory() =
     interface IDesignTimeDbContextFactory<CatContext> with
         member this.CreateDbContext(args) =
-            let connectionString = Settings.getConnectionString ()
-
-            new CatContext(connectionString)
+            new CatContext(Settings.getConnectionString ())

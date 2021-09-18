@@ -37,7 +37,7 @@ type Settings =
 module Settings =
     [<Literal>]
     let private config = "App.Config"
-    
+
     let fromArgv argv =
         let results =
             Parser.Parse(inputs = argv, configurationReader = ConfigurationReader.FromAppSettingsFile(config))
@@ -48,8 +48,5 @@ module Settings =
 
     let getConnectionString () =
         Parser
-            .Parse(
-                ignoreUnrecognized = true,
-                configurationReader = ConfigurationReader.FromAppSettingsFile(config)
-            )
+            .Parse(ignoreUnrecognized = true, configurationReader = ConfigurationReader.FromAppSettingsFile(config))
             .GetResult <@ ConnectionString @>

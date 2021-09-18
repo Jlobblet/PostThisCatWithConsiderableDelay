@@ -17,8 +17,6 @@ open PostThisCatWithConsiderableDelay.Settings
 [<Measure>]
 type ms = s
 
-let inline thunk a () = a
-
 let isRefNull (a: 'a when 'a: not struct) = obj.ReferenceEquals(a, null)
 
 [<RequireQualifiedAccess>]
@@ -38,9 +36,10 @@ type IServiceProvider with
 
 type DbContext with
     member this.TryFindAsync<'TEntity when 'TEntity: not struct>([<ParamArray>] keyValues: obj []) =
-        vtask {
-            let! result = this.FindAsync<'TEntity> keyValues
-            return Option.ofRef result
+        task {
+            return!
+                this.FindAsync<'TEntity> keyValues
+                |> Task.mapV Option.ofRef
         }
 
     member this.TryFind([<ParamArray>] keyValues: obj []) = this.TryFindAsync(keyValues).Result
@@ -65,13 +64,10 @@ type ApplicationCommandsExtension with
         let modules =
             assembly.GetTypes()
             |> Array.filter (fun t -> t.IsSubclassOf typeof<ApplicationCommandsModule>)
-            |> tap (printfn "modules: %A")
 
         guilds
-        |> tap (printfn "guilds: %A")
         |> Array.map System.Nullable
         |> Array.allPairs modules
-        |> tap (printfn "pairs: %A")
         |> Array.Parallel.iter this.RegisterCommands
 
     member this.RegisterEvent =
@@ -92,6 +88,10 @@ module Task =
                 do! Task.Delay(interval / 1<ms>)
         }
 
-    let start (task: Task) = task.Start()
+    let runSynchronously (task: Task<'a>) = task.Result
+
+    let start (task: Task) =
+        if not task.IsCompleted then
+            task.Start()
 
     let ignoreV<'a> (vt: ValueTask<'a>) = vt.AsTask() |> Task.ignore

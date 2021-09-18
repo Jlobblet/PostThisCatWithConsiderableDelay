@@ -14,10 +14,7 @@
         <Compile Include="Settings.fs" />
         <Compile Include="Models\Models.fs" />
         <Compile Include="Models\CatContext.fs" />
-        <Compile Include="Migrations\CatContextModelSnapshot.fs" />
-        <Compile Include="Migrations\20210916153518_Initial.fs" />
-        <Compile Include="Migrations\20210916225119_Add Guild table.fs" />
-        <Compile Include="Migrations\20210917000324_Add Posts to Guild table.fs" />
+        <Folder Include="Migrations" />
         <Compile Include="Services.fs" />
         <Compile Include="Extensions.fs" />
         <Compile Include="Database.fs" />
@@ -33,6 +30,7 @@
       <PackageReference Include="Argu" Version="6.1.1" />
       <PackageReference Include="DisCatSharp" Version="9.8.2" />
       <PackageReference Include="DisCatSharp.ApplicationCommands" Version="9.8.2" />
+      <PackageReference Include="DisCatSharp.CommandsNext" Version="9.8.2" />
       <PackageReference Include="EntityFrameworkCore.FSharp" Version="5.0.3-beta006" />
       <PackageReference Include="FSharpPlus" Version="1.2.1" />
       <PackageReference Include="FsToolkit.ErrorHandling" Version="2.7.0" />

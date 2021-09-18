@@ -1,7 +1,9 @@
-module PostThisCatWithConsiderableDelay.Bot.Commands.CatCommands
+namespace PostThisCatWithConsiderableDelay.Bot.Commands.CatCommands
 
 open DisCatSharp
 open DisCatSharp.ApplicationCommands
+open DisCatSharp.CommandsNext
+open DisCatSharp.CommandsNext.Attributes
 open DisCatSharp.Entities
 open FSharpPlus
 open FSharp.Control.Tasks
@@ -27,18 +29,10 @@ type CatCommands() =
         task {
             let settings = context.Services.GetService<Settings>()
 
-            let db =
-                context.Services.GetService<CatContext>()
             // Create a new Guild object or edit an existing one
-            let! existing = db.TryFindAsync<Guild>(context.Guild.Id)
-
             let! guild =
-                existing
-                |> optionWith
-                    (Task.singleton <!> (Guild.setChannel channel.Id))
-                    ((Guild.createAsync context.Guild.Id channel.Id)
-                     |>> thunk
-                     </ Reader.run /> db)
+                Guild.getOrCreateAsync context.Guild.Id channel.Id
+                </ Reader.run /> context.Services
 
             // Send initial message
             let! channel = context.Client.GetChannelAsync guild.CatChannel
@@ -46,11 +40,48 @@ type CatCommands() =
             // Register message
             let! bot =
                 User.getOrCreateAsync context.Client.CurrentUser.Id guild.GuildId
-                </ Reader.run /> db
+                </ Reader.run /> context.Services
 
-            let! post = Post.createAsync message </ Reader.run /> db
+            let! post =
+                Post.createAsync message context.Client.Logger
+                </ Reader.run /> context.Services
 
             do!
                 Task.ignore <!> User.addPostAsync post bot
-                </ Reader.run /> db
+                </ Reader.run /> context.Services
+        }
+
+type CatCommandsOld() =
+    inherit BaseCommandModule()
+
+    [<DefaultValue>]
+    val mutable settings: Settings
+
+    [<Command("register")>]
+    member this.Register(ctx: CommandContext, channel: DiscordChannel) =
+        unitTask {
+            // Create a new Guild object or edit an existing one
+            let! guild =
+                Guild.getOrCreateAsync ctx.Guild.Id channel.Id
+                </ Reader.run /> ctx.Services
+
+            // Send initial message
+            let! channel = ctx.Client.GetChannelAsync guild.CatChannel
+            let! message = channel.SendMessageAsync(this.settings.CatUrl)
+            // Register message
+            let! bot =
+                User.getOrCreateAsync ctx.Client.CurrentUser.Id guild.GuildId
+                </ Reader.run /> ctx.Services
+
+            let! post =
+                Post.createAsync message ctx.Client.Logger
+                </ Reader.run /> ctx.Services
+
+            do!
+                Task.ignore <!> User.addPostAsync post bot
+                </ Reader.run /> ctx.Services
+
+            do!
+                ctx.RespondAsync $"Set {channel.Mention} as the cat channel"
+                |> Task.ignore
         }
