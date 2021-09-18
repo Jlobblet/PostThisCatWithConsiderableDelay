@@ -26,7 +26,7 @@ type CatCommands() =
             .CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource)
             .Start()
 
-        task {
+        unitTask {
             let settings = context.Services.GetService<Settings>()
 
             // Create a new Guild object or edit an existing one
@@ -39,16 +39,18 @@ type CatCommands() =
             let! message = channel.SendMessageAsync(settings.CatUrl)
             // Register message
             let! bot =
-                User.getOrCreateAsync context.Client.CurrentUser.Id guild.GuildId
+                User.getOrCreateAsync context.Client.CurrentUser.Id
                 </ Reader.run /> context.Services
 
             let! post =
-                Post.createAsync message context.Client.Logger
+                Post.createAsync message
                 </ Reader.run /> context.Services
 
-            do!
-                Task.ignore <!> User.addPostAsync post bot
+            let! points =
+                Points.tryUpdateAsync post
                 </ Reader.run /> context.Services
+
+            return ()
         }
 
 type CatCommandsOld() =
@@ -58,30 +60,30 @@ type CatCommandsOld() =
     val mutable settings: Settings
 
     [<Command("register")>]
-    member this.Register(ctx: CommandContext, channel: DiscordChannel) =
+    member this.Register(context: CommandContext, channel: DiscordChannel) =
         unitTask {
+            let settings = context.Services.GetService<Settings>()
             // Create a new Guild object or edit an existing one
             let! guild =
-                Guild.getOrCreateAsync ctx.Guild.Id channel.Id
-                </ Reader.run /> ctx.Services
-
+                Guild.getOrCreateAsync context.Guild.Id channel.Id
+                </ Reader.run /> context.Services
             // Send initial message
-            let! channel = ctx.Client.GetChannelAsync guild.CatChannel
-            let! message = channel.SendMessageAsync(this.settings.CatUrl)
+            let! channel = context.Client.GetChannelAsync guild.CatChannel
+            let! message = channel.SendMessageAsync(settings.CatUrl)
             // Register message
             let! bot =
-                User.getOrCreateAsync ctx.Client.CurrentUser.Id guild.GuildId
-                </ Reader.run /> ctx.Services
+                User.getOrCreateAsync context.Client.CurrentUser.Id
+                </ Reader.run /> context.Services
 
             let! post =
-                Post.createAsync message ctx.Client.Logger
-                </ Reader.run /> ctx.Services
+                Post.createAsync message
+                </ Reader.run /> context.Services
+
+            let! points =
+                Points.tryUpdateAsync post
+                </ Reader.run /> context.Services
 
             do!
-                Task.ignore <!> User.addPostAsync post bot
-                </ Reader.run /> ctx.Services
-
-            do!
-                ctx.RespondAsync $"Set {channel.Mention} as the cat channel"
+                context.Channel.SendMessageAsync "Registered"
                 |> Task.ignore
         }

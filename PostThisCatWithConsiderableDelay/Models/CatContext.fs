@@ -16,6 +16,13 @@ type CatContext(connectionString: string) =
         and set v = this.users <- v
 
     [<DefaultValue>]
+    val mutable private guilds: DbSet<Guild>
+
+    member this.Guilds
+        with get () = this.guilds
+        and set v = this.guilds <- v
+
+    [<DefaultValue>]
     val mutable private posts: DbSet<Post>
 
     member this.Posts
@@ -23,11 +30,11 @@ type CatContext(connectionString: string) =
         and set v = this.posts <- v
 
     [<DefaultValue>]
-    val mutable private guilds: DbSet<Guild>
+    val mutable private points: DbSet<Points>
 
-    member this.Guilds
-        with get () = this.guilds
-        and set v = this.guilds <- v
+    member this.Points
+        with get () = this.points
+        and set v = this.points <- v
 
     override _.OnModelCreating builder =
         builder.RegisterOptionTypes()

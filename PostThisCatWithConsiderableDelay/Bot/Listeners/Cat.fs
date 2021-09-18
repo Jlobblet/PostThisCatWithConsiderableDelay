@@ -13,13 +13,17 @@ open PostThisCatWithConsiderableDelay.Extensions
 open PostThisCatWithConsiderableDelay.Models.Models
 open PostThisCatWithConsiderableDelay.Settings
 
-let private IsValid (services: IServiceProvider) (args: MessageCreateEventArgs) (g: Guild) =
-    if not args.Author.IsBot
-       && g.CatChannel = args.Channel.Id
-       && args.Message.Content = services.GetService<Settings>().CatUrl then
-        Some g
-    else
-        None
+let private IsValid (args: MessageCreateEventArgs) =
+    let inner (services: IServiceProvider) =
+        fun (g: Guild) ->
+            if not args.Author.IsBot
+               && g.CatChannel = args.Channel.Id
+               && args.Message.Content = services.GetService<Settings>().CatUrl then
+                Some g
+            else
+                None
+
+    Reader inner
 
 let AwardPoints (services: IServiceProvider) =
     let event (sender: DiscordClient) (args: MessageCreateEventArgs) =
@@ -28,20 +32,19 @@ let AwardPoints (services: IServiceProvider) =
             do!
                 taskOption {
                     let! guild =
-                        Guild.tryFindAsync args.Guild.Id
+                        Reader.map2 (map << bind) (IsValid args) (Guild.tryFindAsync args.Guild.Id)
                         </ Reader.run /> services
-                        |>> bind (IsValid services args)
 
                     let! user =
-                        User.getOrCreateAsync args.Author.Id args.Guild.Id
+                        User.getOrCreateAsync args.Author.Id
                         </ Reader.run /> services
 
                     let! post =
-                        Post.createAsync args.Message sender.Logger
+                        Post.createAsync args.Message
                         </ Reader.run /> services
 
                     do!
-                        User.addPostAsync post user |>> Async.AwaitTask
+                        User.addPostAsync post user
                         </ Reader.run /> services
                         |>> ignore
                 }

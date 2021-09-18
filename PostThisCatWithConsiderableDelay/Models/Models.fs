@@ -27,7 +27,9 @@ and [<CLIMutable; NoComparison>] Post =
       Guild: Guild }
 
 and [<CLIMutable; NoComparison>] Points =
-    { [<ForeignKey("User"); DatabaseGenerated(DatabaseGeneratedOption.None)>]
+    { [<Key; DatabaseGenerated(DatabaseGeneratedOption.None)>]
+      PointsId: Guid
+      [<ForeignKey("User"); DatabaseGenerated(DatabaseGeneratedOption.None)>]
       UserId: uint64
       User: User
       [<ForeignKey("Guild"); DatabaseGenerated(DatabaseGeneratedOption.None)>]

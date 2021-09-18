@@ -8,14 +8,13 @@ open DisCatSharp.ApplicationCommands
 open DisCatSharp.Common.Utilities
 open DisCatSharp.EventArgs
 open FSharp.Control.Tasks
-open FSharp.Data.UnitSystems.SI.UnitSymbols
 open FSharpPlus
 open FsToolkit.ErrorHandling
 open Microsoft.EntityFrameworkCore
 open PostThisCatWithConsiderableDelay.Settings
 
 [<Measure>]
-type ms = s
+type ms
 
 let isRefNull (a: 'a when 'a: not struct) = obj.ReferenceEquals(a, null)
 
@@ -36,13 +35,13 @@ type IServiceProvider with
 
 type DbContext with
     member this.TryFindAsync<'TEntity when 'TEntity: not struct>([<ParamArray>] keyValues: obj []) =
-        task {
-            return!
-                this.FindAsync<'TEntity> keyValues
-                |> Task.mapV Option.ofRef
-        }
+        this.FindAsync<'TEntity> keyValues
+        |> Task.mapV Option.ofRef
+        |> Async.AwaitTask
 
-    member this.TryFind([<ParamArray>] keyValues: obj []) = this.TryFindAsync(keyValues).Result
+    member this.TryFind<'TEntity when 'TEntity: not struct>([<ParamArray>] keyValues: obj []) =
+        Async.RunSynchronously
+        <| this.TryFindAsync<'TEntity>(keyValues)
 
 type DiscordConfiguration with
     static member FromSettings settings =
@@ -95,3 +94,10 @@ module Task =
             task.Start()
 
     let ignoreV<'a> (vt: ValueTask<'a>) = vt.AsTask() |> Task.ignore
+
+[<RequireQualifiedAccess>]
+module Async =
+    let Return x = async { return x }
+
+    let IgnoreTask: Task -> Async<unit> = Task.ignore >> Async.AwaitTask
+    let IgnoreTaskV<'a> : ValueTask<'a> -> Async<unit> = Task.ignoreV >> Async.AwaitTask

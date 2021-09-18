@@ -14,7 +14,8 @@
         <Compile Include="Settings.fs" />
         <Compile Include="Models\Models.fs" />
         <Compile Include="Models\CatContext.fs" />
-        <Folder Include="Migrations" />
+        <Compile Include="Migrations\20210918133207_Initial.fs" />
+        <Compile Include="Migrations\CatContextModelSnapshot.fs" />
         <Compile Include="Services.fs" />
         <Compile Include="Extensions.fs" />
         <Compile Include="Database.fs" />
